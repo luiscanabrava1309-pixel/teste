@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Simulator - 3D World Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100vh;
+        }
+
+        #hud {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .hud-top-left {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+        }
+
+        .hud-top-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            line-height: 1.8;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            text-align: right;
+        }
+
+        .hud-bottom {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .hud-bottom-left {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+        }
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 15px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            text-align: center;
+            pointer-events: auto;
+        }
+
+        #controls input {
+            margin: 5px;
+            padding: 5px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        #controls input:hover {
+            background: rgba(0, 255, 0, 0.3);
+        }
+
+        .warning {
+            color: #ff6600;
+            text-shadow: 0 0 5px #ff6600;
+        }
+
+        .danger {
+            color: #ff0000;
+            text-shadow: 0 0 5px #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="hud">
+        <div class="hud-top-left">
+            <div>FLIGHT STATUS</div>
+            <div>─────────────</div>
+            <div>ALT: <span id="altitude">0</span> ft</div>
+            <div>SPD: <span id="speed">0</span> knots</div>
+            <div>HDG: <span id="heading">0</span>°</div>
+            <div>PITCH: <span id="pitch">0</span>°</div>
+            <div>ROLL: <span id="roll">0</span>°</div>
+            <div>CLIMB: <span id="climb">0</span> ft/s</div>
+        </div>
+
+        <div class="hud-top-right">
+            <div>POSITION</div>
+            <div>─────────</div>
+            <div>LAT: <span id="latitude">0.00</span>°</div>
+            <div>LON: <span id="longitude">0.00</span>°</div>
+            <div>FUEL: <span id="fuel">100</span>%</div>
+            <div>ENGINE: <span id="engine">ON</span></div>
+        </div>
+
+        <div class="hud-bottom-left">
+            <div id="warning-msg"></div>
+        </div>
+
+        <div class="hud-bottom">
+            <div id="location-info">Loading world...</div>
+        </div>
+
+        <div id="controls">
+            <div>WASD: Move | SPACE/C: Up/Down | Mouse: Look | Q/E: Roll | R: Reset</div>
+            <button onclick="togglePointerLock()">Lock Pointer</button>
+            <button onclick="changeLocation()">Random Location</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/perlin-noise-3d@1.0.0/perlin.min.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
